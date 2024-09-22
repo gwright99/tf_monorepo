@@ -1,3 +1,4 @@
 module "testvpc" {
-    source = "s3::https://s3.amazonaws.com/nf-nvirginia/vpc/v1.0.0.zip"
+    # source = "s3::https://nf-nvirginia.s3.amazonaws.com/vpc/1.0.0.zip"
+    source = "../../../modules/vpc/"
 }

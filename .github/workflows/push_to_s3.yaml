@@ -33,9 +33,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: "us-east-1"
+          role-duration-seconds: 1200
 
       - name: ZIP Modules and ship to S3
         env:
-          BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
+          TARGET_S3_BUCKET: ${{ secrets.TARGET_S3_BUCKET }}
         run: |
           python3 infrastructure/module_deployment/main.py

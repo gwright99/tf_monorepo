@@ -8,6 +8,7 @@ import yaml
 
 BUCKET_NAME = os.getenv("TARGET_S3_BUCKET")
 
+# NOTE: This logic will overwrite existing packages without asking. Good for Dev, bad for Prod.
 
 if __name__ == "__main__":
     # Read in config around versions of the modules to deploy
@@ -26,12 +27,17 @@ if __name__ == "__main__":
     for module, version in config.items():
         print(f"Beginning to zip module {module}-{version}.")
 
-        zip_output_name = (
-            f"{os.getcwd()}/infrastructure/modules/{module}/{module}-{version}"
-        )
+        # zip_output_name = (
+        #     f"{os.getcwd()}/infrastructure/modules/{module}/{module}-{version}"
+        # )
+
+        # Packaged modules contain another (empty) copy of the archive (e.g. main.tf and vpc-1.0.0.zip)
+        # I think this is due to zip_output_name pointing to the same directory. Changing to /tmp
+
+        zip_output_name = f"/tmp/{module}-{version}"
         directory_name = f"{os.getcwd()}/infrastructure/modules/{module}/"
 
-        shutil.make_archive(zip_output_name, "zip", directory_name)
+        shutil.make_archive(zip_output_name, format="zip", root_dir=directory_name)
         print(f"Done zipping module {module}-{version}.")
 
         print(f"Uploading {module}-{version} to S3.")
