@@ -31,7 +31,7 @@ if __name__ == "__main__":
         )
         directory_name = f"{os.getcwd()}/infrastructure/modules/{module}/"
 
-        shutil.make_archive(zip_output_name, "zip", directory_name)
+        shutil.make_archive(zip_output_name, format="zip", root_dir=directory_name)
         print(f"Done zipping module {module}-{version}.")
 
         print(f"Uploading {module}-{version} to S3.")
