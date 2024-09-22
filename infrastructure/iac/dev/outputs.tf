@@ -1,3 +1,3 @@
 output "vpc_id" {
-    value = module.testvpc.id
+    value = module.toplevel_vpc.id
 }

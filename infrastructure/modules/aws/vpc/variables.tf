@@ -21,5 +21,8 @@ variable "vpc_preexisting_id" {
     #     condition = var.vpc_type == "preexisting" && length(var.vpc_preexisting_id) > 0
     #     error_message = "Variable `vpc_prexisting_id` cannot be blank."
     # }
+}
 
+variable vpc_module_options {
+    type = map(bool)
 }
