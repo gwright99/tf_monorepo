@@ -31,17 +31,19 @@ if __name__ == "__main__":
         #     f"{os.getcwd()}/infrastructure/modules/{module}/{module}-{version}"
         # )
 
+        cloud, module = module.split("/")
+
         # Packaged modules contain another (empty) copy of the archive (e.g. main.tf and vpc-1.0.0.zip)
         # I think this is due to zip_output_name pointing to the same directory. Changing to /tmp
 
-        zip_output_name = f"/tmp/{module}-{version}"
-        directory_name = f"{os.getcwd()}/infrastructure/modules/{module}/"
+        zip_output_name = f"/tmp/{cloud}-{module}-{version}"
+        directory_name = f"{os.getcwd()}/infrastructure/modules/{cloud}/{module}/"
 
         shutil.make_archive(zip_output_name, format="zip", root_dir=directory_name)
-        print(f"Done zipping module {module}-{version}.")
+        print(f"Done zipping module {cloud}-{module}-{version}.")
 
-        print(f"Uploading {module}-{version} to S3.")
+        print(f"Uploading {cloud}-{module}-{version} to S3.")
         s3_client.upload_file(
-            f"{zip_output_name}.zip", BUCKET_NAME, f"{module}/{version}.zip"
+            f"{zip_output_name}.zip", BUCKET_NAME, f"{cloud}/{module}/{version}.zip"
         )
-        print(f"Done uploading {module}-{version} to S3.")
+        print(f"Done uploading {cloud}-{module}-{version} to S3.")
