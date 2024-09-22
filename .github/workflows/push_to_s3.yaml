@@ -37,6 +37,6 @@ jobs:
 
       - name: ZIP Modules and ship to S3
         env:
-          BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
+          BUCKET_NAME: ${{ secrets.TARGET_S3_BUCKET }}
         run: |
           python3 infrastructure/module_deployment/main.py
