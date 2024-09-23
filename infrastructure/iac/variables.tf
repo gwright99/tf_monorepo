@@ -41,5 +41,12 @@ variable "vpc_preexisting_id" {
 }
 
 variable vpc_module_options {
-    type = map(bool)
+    # type = map(bool)
+    type = any
+}
+
+
+variable default_network_acl_ingress {
+    # type = list(map(string))
+    type = any
 }

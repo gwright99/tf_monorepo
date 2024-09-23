@@ -69,7 +69,13 @@ for i in range(len(entries) - 1, 0, -1):
         entries[i - 1] = f"{entries[i-1]} {changed}"
         entries.pop(i)
 
+print("=============== TFVARS =====================")
 print("\n".join(entries))
+
+print("=============== MODULE =====================")
+for entry in entries:
+    key, value = entry.split("=", maxsplit=1)
+    print(f'{key} = lookup(var.vpc_module_options, "{key}", {value})')
 
 
 """

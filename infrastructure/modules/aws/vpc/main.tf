@@ -9,6 +9,28 @@ resource "aws_vpc" "main" {
   }
 }
 
+locals {
+  # mymap = tomap({"a"= "1"})
+  # # mylist = tolist(local.mymap)
+  # mystring = tostring(local.mymap)
+
+  # j = jsonencode([ { "a"=1 } ] )
+  # m = tolist(local.j)
+
+  # # default_network_acl_ingress = tostring("[${local.m}]")
+  # default_network_acl_ingress = [{"a": "1"}]
+
+  # module_ids = [ tomap({"a"="b"}) ]
+
+  x = { 
+    rule_number = 100
+  }
+
+  y = [ for key, value in local.x: { "${key}" = "${value}" } ]
+
+}
+
+
 module "vpc" {
   # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest?tab=dependencies
   source  = "terraform-aws-modules/vpc/aws"
@@ -30,6 +52,13 @@ module "vpc" {
   single_nat_gateway = lookup(var.vpc_module_options, "single_nat_gateway", false)
   map_public_ip_on_launch = lookup(var.vpc_module_options, "map_public_ip_on_launch", false)
   one_nat_gateway_per_az= lookup(var.vpc_module_options, "one_nat_gateway_per_az", false)
+
+  # default_network_acl_ingress  = lookup(var.vpc_module_options, "default_network_acl_ingress ", [ for key, value in local.x: { "${key}" => "${value}" } ])
+  # default_network_acl_ingress  = lookup(var.vpc_module_options, "default_network_acl_ingress ", tolist(tomap({ a = "1"})))
+  # default_network_acl_ingress  = lookup(var.vpc_module_options, "default_network_acl_ingress ", var.default_network_acl_ingress)
+  default_network_acl_ingress  = lookup(var.vpc_module_options, "default_network_acl_ingress ", [{"action": "allow","cidr_block": "10.9.0.0/16","from_port": 0,"protocol": "-1","rule_no": 100,"to_port": 0}])
+
+  #, local.default_network_acl_ingress) #  [ { "rule_no" =  "999" } ] )
 
 }
 

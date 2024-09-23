@@ -7,4 +7,7 @@ module "toplevel_vpc" {
 
     vpc_module_options = var.vpc_module_options
 
+    # Workaround for list of maps of strings
+    default_network_acl_ingress = var.default_network_acl_ingress
+
 }
