@@ -1,82 +1,73 @@
 # import pandas as pd
 # df = pd.read_html("https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest")
 
+import subprocess
+
 import requests
 
-url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-vpc/refs/heads/master/variables.tf"
+TF_ROOT = (
+    "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-vpc/refs"
+)
 
+targets = {
+    "vpc": {
+        "source_url": f"{TF_ROOT}/heads/master/variables.tf",
+        "output_hcl": "/tmp/tfaws/vpc.hcl",
+        "output_json": "/tmp/tfaws/vpc.json",
+    }
+}
+
+url = f"{TF_ROOT}/heads/master/variables.tf"
+file = "/tmp/tfaws/vpc.hcl"
+# Add test to create folder if not exists
 r = requests.get(url)
-# print(r.content)
+with open(file, "w") as f:
+    f.write(r.text)
 
-entries = r.text.split("\n")
+# command = "docker run --rm hello-world"
+# command = command.split(" ")
+# result = subprocess.run(command, capture_output=True)
+
+command = "docker run --rm -v /tmp/tfaws/vpc.hcl:/tmp/tfaws/vpc.hcl tmccombs/hcl2json /tmp/tfaws/vpc.hcl"
+command = command.split(" ")
+result = subprocess.run(command, capture_output=True)
+print(result.stdout)
+
+file = "/tmp/tfaws/vpc.json"
+with open(file, "wb") as f:
+    f.write(result.stdout)
+
+"""
+{
+    "variable": {
+        "amazon_side_asn": [
+            {
+                "default": "64512",
+                "description": "The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN",
+                "type": "${string}"
+            }
+        ],
+        "azs": [
+            {
+                "default": [],
+                "description": "A list of availability zones names or ids in the region",
+                "type": "${list(string)}"
+            }
+        ],
+        "cidr": [
+            {
+                "default": "10.0.0.0/16",
+                "description": "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` \u0026 `ipv4_ipam_pool_id`",
+                "type": "${string}"
+            }
+        ],
+"""
+
+
+exit()
+
 
 purge_words = ["  description", "  type", "###", "# ", "putin_khuylo"]
-# enumerate() returns a generator and generators can't be reversed, you need to convert it to a list first.
-for index, value in (list(enumerate(entries)))[::-1]:
-
-    if any(word in value for word in purge_words) or (value == ""):
-        entries.pop(index)
-
-print(entries)
-
-for index, value in enumerate(entries):
-    if 'variable "' in value:
-        key = value.split('"')[1]
-        entries[index] = key
-
-for index, value in (list(enumerate(entries)))[::-1]:
-    if "}" == value:
-        entries.pop(index)
-
-for index, value in (list(enumerate(entries)))[::-1]:
-    if "  default" in value:
-        reduced = value.split("=")[1]
-        entries[index - 1] = f"{entries[index-1]} = {reduced}"
-        entries.pop(index)
-
-print("\n".join(entries))
-# THIS OUTPUT SHOULD BE OK TO USE FOR THE TFVARS (I THINK)
-
-
-# Add quotes around keys so i can use tomap()
-for index, value in list(enumerate(entries)):
-    if value.startswith("  ") and "=" in value:
-        k, v = value.split("=")
-        entries[index] = f'  "{k.strip()}": {v},'
-
-print("\n".join(entries))
-
-# Smash them altogether
-# Cant use enumerate because tuples keep original state
-# for index, value in (list(enumerate(entries)))[::-1]:
-for i in range(len(entries) - 1, 0, -1):
-    value = entries[i]
-    if value.startswith("  "):
-
-        changed = value.lstrip()
-        entries[i - 1] = f"{entries[i-1]} {changed}"
-        entries.pop(i)
-
-
-# default_network_acl_ingress
-#   default = [
-#     {
-#       rule_no    = 100
-#       action     = "allow"
-#       from_port  = 0
-#       to_port    = 0
-#       protocol   = "-1"
-#       cidr_block = "0.0.0.0/0"
-#     },
-#     {
-#       rule_no         = 101
-#       action          = "allow"
-#       from_port       = 0
-#       to_port         = 0
-#       protocol        = "-1"
-#       ipv6_cidr_block = "::/0"
-#     },
-#   ]
 
 
 print("=============== TFVARS =====================")
