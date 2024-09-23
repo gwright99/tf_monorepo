@@ -42,19 +42,7 @@ print("\n".join(entries))
 for index, value in list(enumerate(entries)):
     if value.startswith("  ") and "=" in value:
         k, v = value.split("=")
-        entries[index] = f'  "{k.strip()}" = {v},'
-
-print("\n".join(entries))
-
-# Add tomap()
-for index, value in list(enumerate(entries)):
-    if value.startswith("  "):
-        if "{" in value:
-            entries[index] = "  tomap({"
-        elif "}," in value:
-            entries[index] = "  }),"
-        else:
-            continue
+        entries[index] = f'  "{k.strip()}": {v},'
 
 print("\n".join(entries))
 
@@ -68,6 +56,28 @@ for i in range(len(entries) - 1, 0, -1):
         changed = value.lstrip()
         entries[i - 1] = f"{entries[i-1]} {changed}"
         entries.pop(i)
+
+
+# default_network_acl_ingress
+#   default = [
+#     {
+#       rule_no    = 100
+#       action     = "allow"
+#       from_port  = 0
+#       to_port    = 0
+#       protocol   = "-1"
+#       cidr_block = "0.0.0.0/0"
+#     },
+#     {
+#       rule_no         = 101
+#       action          = "allow"
+#       from_port       = 0
+#       to_port         = 0
+#       protocol        = "-1"
+#       ipv6_cidr_block = "::/0"
+#     },
+#   ]
+
 
 print("=============== TFVARS =====================")
 print("\n".join(entries))
