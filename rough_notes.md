@@ -19,3 +19,33 @@ Notes to self:
 Please migrate your code to use AWS SDK for JavaScript (v3).
 For more information, check the migration guide at https://a.co/7PzMCcy
 (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+## Modules
+- AWS
+    - Top-Level: https://github.com/terraform-aws-modules
+
+    - VPC
+        - https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
+        - https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/v5.1.2/variables.tf
+
+    - Elasticache
+        - https://registry.terraform.io/modules/terraform-aws-modules/elasticache/aws/latest?tab=resources
+        - https://github.com/terraform-aws-modules/terraform-aws-elasticache/blob/v1.2.3/variables.tf
+
+    - RDS 
+        - https://registry.terraform.io/modules/terraform-aws-modules/rds/aws/latest
+        - https://github.com/terraform-aws-modules/terraform-aws-rds/blob/v6.9.0/variables.tf
+
+    - Security Group
+        - https://github.com/terraform-aws-modules/terraform-aws-security-group
+        - https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-security-group/refs/tags/v5.2.0/variables.tf
+
+    - ALB
+        - https://github.com/terraform-aws-modules/terraform-aws-alb
+        - https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-alb/refs/tags/v9.11.0/variables.tf
+
+    - EKS
+        - https://github.com/terraform-aws-modules/terraform-aws-eks
+        - 
